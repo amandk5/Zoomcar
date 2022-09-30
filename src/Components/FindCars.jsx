@@ -6,10 +6,13 @@ import { GoPrimitiveDot } from "react-icons/go";
 import findCarStyles from "./FindCars.module.css";
 import { useState } from "react";
 import SelectLocation from "./SelectLocation";
+import { useNavigate } from "react-router-dom";
 
 export default function FindCars({ changeBackground }) {
   const [isbtnclicked, setBtn] = useState(true);
   const [openModal,setModalStatus] = useState(false);
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -68,7 +71,7 @@ export default function FindCars({ changeBackground }) {
         <Box opacity="0.5" onClick={()=>setModalStatus(true)}>Pick Up CIty, Airport, Address Or Hotel</Box>
       </Flex>
       <br />
-      <Button w="100%" p="7" bg="gainsboro">
+      <Button w="100%" p="7" bg="gainsboro" onClick={()=>navigate("/search")}>
         <Text opacity="0.5">FIND CARS</Text>
       </Button>
     </Box>
