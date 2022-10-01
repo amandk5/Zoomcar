@@ -27,7 +27,7 @@ import CarKmRunSlider from "./CarKmRunSlider";
 
 export default function SortAndFilters() {
   return (
-    <Box w="28%" border="1px solid black" px="3" py="3">
+    <Box w="28%" px="3" py="3" bg="white" borderRadius="0.25rem" shadow="base">
       <Flex alignItems="center" justifyContent="space-between" mb="2">
         <Text fontSize="18px" fontWeight="bold">
           Sort And Filters{" "}
@@ -161,7 +161,7 @@ export default function SortAndFilters() {
               <Input
                 size="xs"
                 fontSize="10px"
-                placeholder='Try Search "Honda City"'
+                placeholder='Try Search "Kia Seltos"'
               />
               <InputRightElement
                 h="100%"
