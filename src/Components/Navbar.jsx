@@ -20,10 +20,14 @@ import { FaUserAlt } from "react-icons/fa";
 import { BsTelephone, BsLayoutTextSidebar } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import NavbarStyles from "./Navbar.module.css";
+import { useContext } from "react";
+import { AuthContext } from "../Context/AuthContextProvider";
 
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef(null);
+
+  const { isAuth, logOutUser } = useContext(AuthContext);
 
   return (
     <div>
@@ -54,9 +58,28 @@ export default function Navbar() {
           <a href="https://www.zoomcar.com/zoomcar-mobility-services">
             <h1>ZMS</h1>
           </a>
-          <Link to="">
-            <h1>LogIn/SignUp</h1>
-          </Link>
+          {/* if logged in then show bookings page */}
+          {isAuth ? (
+            <Link to="/login">
+              <h1>Bookings</h1>
+            </Link>
+          ) : null}
+          {!isAuth ? (
+            <Link to="/login">
+              <h1>LogIn/SignUp</h1>
+            </Link>
+          ) : (
+            <Button
+              size="md"
+              bg="red"
+              color="#ffffff"
+              borderRadius="1.5rem"
+              _hover="none"
+              onClick={logOutUser}
+            >
+              LOGOUT
+            </Button>
+          )}
         </Flex>
       </Flex>
 

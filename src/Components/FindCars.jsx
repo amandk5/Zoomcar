@@ -16,14 +16,15 @@ export default function FindCars({ changeBackground }) {
 
   return (
     <>
-    <Box mb="30px">
+    <Box marginBottom="70px">
       <Flex flexWrap="wrap">
         <Button
           fontWeight="light"
           bg="#F5F5F5"
           className={findCarStyles.flex}
           px="20"
-          py="7"
+          py="5"
+          fontSize="15px"
           borderRightRadius="0rem"
           border={isbtnclicked ? "1px solid lightgreen" : null}
           onClick={() => {
@@ -41,7 +42,9 @@ export default function FindCars({ changeBackground }) {
           bg="#F5F5F5"
           className={findCarStyles.flex}
           px="20"
-          py="7"
+          py="5"
+          mb="3"
+          fontSize="15px"
           borderLeftRadius="0rem"
           border={!isbtnclicked ? "1px solid lightgreen" : null}
           onClick={() => {
@@ -55,13 +58,14 @@ export default function FindCars({ changeBackground }) {
           <p>Airport Round Trip</p>
         </Button>
       </Flex>
-      <br />
       <Flex
         w="100"
         bg="#F5F5F5"
-        p="4"
+        p="3"
+        fontSize="15px"
         alignItems="center"
         gap="2"
+        mb="3"
         borderRadius="0.5rem"
         cursor="pointer"
       >
@@ -70,8 +74,7 @@ export default function FindCars({ changeBackground }) {
         </Box>
         <Box opacity="0.5" onClick={()=>setModalStatus(true)}>Pick Up CIty, Airport, Address Or Hotel</Box>
       </Flex>
-      <br />
-      <Button w="100%" p="7" bg="gainsboro" onClick={()=>navigate("/search")}>
+      <Button w="100%" p="3" bg="gainsboro" onClick={()=>navigate("/search")}>
         <Text opacity="0.5">FIND CARS</Text>
       </Button>
     </Box>

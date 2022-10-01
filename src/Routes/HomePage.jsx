@@ -1,10 +1,11 @@
 import Box1 from "../Components/Box1";
+import Navbar from "../Components/Navbar";
 
-export default function HomePage(){
-
-    return (
-        <div>
-            <Box1/>
-        </div>
-    )
+export default function HomePage() {
+  return (
+    <div>
+      <Navbar />
+      <Box1 />
+    </div>
+  );
 }
