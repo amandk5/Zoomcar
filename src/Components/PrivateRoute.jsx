@@ -5,8 +5,9 @@ import { AuthContext } from "../Context/AuthContextProvider";
 
 export default function PrivateRoute({ children }) {
   const { isAuth } = useContext(AuthContext);
+  const LoggedInStatusLS = localStorage.getItem("isLoggedIn");
 
-  if (!isAuth) {
+  if (!isAuth || !LoggedInStatusLS) {
     return <Navigate to="/search" />;
   }
 

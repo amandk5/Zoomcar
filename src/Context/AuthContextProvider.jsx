@@ -8,6 +8,7 @@ export default function AuthContextProvider({ children }) {
   const [isAuth, setAuthStatus] = useState(false);
   const [token, setToken] = useState(null);
   const [registered, setRegistrationStatus] = useState(false);
+  const [location, setLocation] = useState("");
 
   const loginUser = (userCredential) => {
     axios
@@ -19,6 +20,11 @@ export default function AuthContextProvider({ children }) {
         alert("Logged In Successfully");
         setAuthStatus(true);
         setToken(res.data.token);
+        let loggedIn = localStorage.getItem("isLoggedIn");
+        if (loggedIn === undefined) {
+          localStorage.setItem("isLoggedIn", true);
+        }
+        localStorage.setItem("isLoggedIn", true);
       })
       .catch((err) => {
         alert("invalid email or password");
@@ -50,11 +56,25 @@ export default function AuthContextProvider({ children }) {
   const logOutUser = () => {
     setAuthStatus(false);
     setToken(null);
-  }
+    localStorage.setItem("isLoggedIn", false);
+  };
 
+  const changeLocation = (newLocation) => {
+    setLocation(newLocation);
+  };
+  
   return (
     <AuthContext.Provider
-      value={{ isAuth, token, loginUser, registered, registerUser, logOutUser }}
+      value={{
+        isAuth,
+        token,
+        loginUser,
+        registered,
+        registerUser,
+        logOutUser,
+        location,
+        changeLocation,
+      }}
     >
       {children}
     </AuthContext.Provider>

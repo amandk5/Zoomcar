@@ -18,7 +18,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { GrLocation } from "react-icons/gr";
 import { FaUserAlt } from "react-icons/fa";
 import { BsTelephone, BsLayoutTextSidebar } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NavbarStyles from "./Navbar.module.css";
 import { useContext } from "react";
 import { AuthContext } from "../Context/AuthContextProvider";
@@ -28,6 +28,7 @@ export default function Navbar() {
   const btnRef = useRef(null);
 
   const { isAuth, logOutUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -60,7 +61,7 @@ export default function Navbar() {
           </a>
           {/* if logged in then show bookings page */}
           {isAuth ? (
-            <Link to="/login">
+            <Link to="/bookings">
               <h1>Bookings</h1>
             </Link>
           ) : null}
@@ -75,7 +76,10 @@ export default function Navbar() {
               color="#ffffff"
               borderRadius="1.5rem"
               _hover="none"
-              onClick={logOutUser}
+              onClick={() => {
+                logOutUser();
+                navigate("/");
+              }}
             >
               LOGOUT
             </Button>
@@ -107,6 +111,9 @@ export default function Navbar() {
                 className={NavbarStyles.leftLink}
                 alignItems="center"
                 gap="4"
+                onClick={()=>{
+                  onClose();
+                }}
               >
                 <GrLocation />
                 Change City
@@ -145,7 +152,7 @@ export default function Navbar() {
                 Zoomcar Host Vehicles Policies
               </Flex>
             </a>
-            <Link to="/faq">
+            <a href="https://www.zoomcar.com/faq">
               <Flex
                 className={NavbarStyles.leftLink}
                 alignItems="center"
@@ -154,7 +161,7 @@ export default function Navbar() {
                 <BsTelephone />
                 Help & Support
               </Flex>
-            </Link>
+            </a>
           </DrawerBody>
         </DrawerContent>
       </Drawer>
