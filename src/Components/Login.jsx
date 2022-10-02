@@ -40,12 +40,13 @@ const reducer = (state, action) => {
 export default function Login() {
   const { isAuth, loginUser } = useContext(AuthContext);
   const [state, dispatch] = useReducer(reducer, initialState);
+  const LoggedInStatusLS = localStorage.getItem("isLoggedIn");
 
   useEffect(() => {
     console.log(state);
   }, [state]);
 
-  if (isAuth) {
+  if (isAuth && LoggedInStatusLS) {
     return <Navigate to="/search" />;
   }
 

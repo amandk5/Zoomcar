@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Img, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import React from "react";
 import { GoPrimitiveDot } from "react-icons/go";
 import { BsArrowRight } from "react-icons/bs";
@@ -7,6 +7,26 @@ import CarCard from "../Components/CarCard";
 
 import carData from "../Db/db.json";
 import Navbar from "../Components/Navbar";
+import axios from "axios";
+
+const addToBooking = (carObj) => {
+  return axios
+    .post(`https://stark-falls-73043.herokuapp.com/bookings`, {
+      image: carObj.image,
+      name: carObj.name,
+      transmission: carObj.transmission,
+      fuel: carObj.fuel,
+      seats: carObj.seats,
+      ratings: carObj.ratings,
+      kms: carObj.kms,
+      address: carObj.address,
+      discount_price: carObj.discount_price,
+      original_price: carObj.original_price,
+    })
+    .then(() => {
+      alert("booking successful");
+    });
+};
 
 export default function ResultsPage() {
   return (
@@ -76,6 +96,7 @@ export default function ResultsPage() {
                 address={car.address}
                 discount_price={car.discount_price}
                 original_price={car.original_price}
+                addToBooking={addToBooking}
               />
             ))}
           </Box>
