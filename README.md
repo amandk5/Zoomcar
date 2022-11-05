@@ -4,7 +4,7 @@
 
 # Vercel Link
 
-<a href="https://rural-vessel-2538-flax.vercel.app/">Mentimeter Clone</a>
+<a href="https://rural-vessel-2538-flax.vercel.app/">Zoomcar Clone</a>
 
 # Technology
 
