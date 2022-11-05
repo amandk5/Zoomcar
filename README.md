@@ -6,7 +6,7 @@
 
 # Technology
 
-    Frontend: HTML, CSS, JS, ReactJs, C
+    Frontend: HTML, CSS, JS, ReactJs, Chakra-UI
     
     Deployment: For Frontend -Vercel
                 For Backend - JSON Server deployed on Heroku
