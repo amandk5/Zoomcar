@@ -4,8 +4,6 @@
 
 ### Vercel Link - <a href="https://rural-vessel-2538-flax.vercel.app/">Zoomcar Clone</a>
 
-<img src="https://i.postimg.cc/B69rfPFS/zoomcar.png" alt="zoomcar homepage"/>
-
 # Technology
 
     Frontend: HTML, CSS, JS, ReactJs, Chakra-UI
@@ -21,4 +19,33 @@
     -showing the cars to user which are avialable for booking 
     -storing the car bookings done by user
     -user can also cancel the booking
+
+## Below are some of the Screenshots with features:
+<ul>
+    <li>
+     <div>
+         <h4>homepage</h4>
+         <img src="https://i.postimg.cc/B69rfPFS/zoomcar.png" alt="zoomcar homepage"/>
+     </div>
+    </li>
+    <li>
+     <div>
+         <h4>Register Page</h4>
+         <img src="https://i.postimg.cc/6Q9s0Wqj/zoomcar-Register.png" alt="zoomcar register page"/>
+     </div>
+    </li>
+    <li>
+     <div>
+         <h4>Login Page</h4>
+         <img src="https://i.postimg.cc/s29hkcVf/zoomcar-Login.png" alt="zoomcar register page"/>
+     </div>
+    </li>
+    <li>
+     <div>
+         <h4>Dashboard Page</h4>
+         <img src="https://i.postimg.cc/26dNF1FK/zoomcar-Dashboard.png" alt="zoomcar register page"/>
+     </div>
+    </li>
+</ul
+
     
