@@ -11,7 +11,7 @@ import axios from "axios";
 
 const addToBooking = (carObj) => {
   return axios
-    .post(`https://stark-falls-73043.herokuapp.com/bookings`, {
+    .post(`https://json-server-p1rm.onrender.com/bookings`, {
       image: carObj.image,
       name: carObj.name,
       transmission: carObj.transmission,

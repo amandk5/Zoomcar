@@ -7,7 +7,7 @@ import CarCard from "../Components/CarCard";
 import Navbar from "../Components/Navbar";
 
 const getBookingsData = async () => {
-  return await axios.get("https://stark-falls-73043.herokuapp.com/bookings");
+  return await axios.get("https://json-server-p1rm.onrender.com/bookings");
 };
 
 export default function BookingsPage() {
@@ -23,7 +23,7 @@ export default function BookingsPage() {
 
   const cancelBooking = async (id) => {
     return await axios
-      .delete(`https://stark-falls-73043.herokuapp.com/bookings/${id}`)
+      .delete(`https://json-server-p1rm.onrender.com/bookings/${id}`)
       .then(() => {
         alert("Booking Cancellation Successful");
         fetchAndUpdateCarData();
