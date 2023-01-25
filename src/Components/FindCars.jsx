@@ -1,4 +1,12 @@
-import { background, Box, Button, color, Flex, Text } from "@chakra-ui/react";
+import {
+  background,
+  Box,
+  Button,
+  color,
+  Flex,
+  Text,
+  useMediaQuery,
+} from "@chakra-ui/react";
 import React from "react";
 import { BsArrowLeftRight } from "react-icons/bs";
 import { TbPlane } from "react-icons/tb";
@@ -13,6 +21,7 @@ import { AuthContext } from "../Context/AuthContextProvider";
 export default function FindCars({ changeBackground }) {
   const [isbtnclicked, setBtn] = useState(true);
   const [openModal, setModalStatus] = useState(false);
+  const [isSmallerThan530] = useMediaQuery("(max-width: 530px)");
 
   const navigate = useNavigate();
   const { location } = useContext(AuthContext);
@@ -20,12 +29,12 @@ export default function FindCars({ changeBackground }) {
   return (
     <>
       <Box marginBottom="70px">
-        <Flex flexWrap="wrap">
+        <Flex flexWrap="wrap" p="2">
           <Button
             fontWeight="light"
             bg="#F5F5F5"
             className={findCarStyles.flex}
-            px="20"
+            px={!isSmallerThan530 ? "20" : "7"}
             py="5"
             fontSize="15px"
             borderRightRadius="0rem"
@@ -44,7 +53,7 @@ export default function FindCars({ changeBackground }) {
             fontWeight="light"
             bg="#F5F5F5"
             className={findCarStyles.flex}
-            px="20"
+            px={!isSmallerThan530 ? "20" : "7"}
             py="5"
             mb="3"
             fontSize="15px"
@@ -104,7 +113,7 @@ export default function FindCars({ changeBackground }) {
             }
           }}
         >
-          <Text opacity={location==="" ? "0.5" : "1"}>FIND CARS</Text>
+          <Text opacity={location === "" ? "0.5" : "1"}>FIND CARS</Text>
         </Button>
       </Box>
       <SelectLocation openModal={openModal} setModalStatus={setModalStatus} />

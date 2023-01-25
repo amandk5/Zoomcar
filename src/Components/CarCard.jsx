@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Img, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Img, Text, useMediaQuery } from "@chakra-ui/react";
 import React from "react";
 import { useContext } from "react";
 import { AiFillStar } from "react-icons/ai";
@@ -40,6 +40,7 @@ export default function CarCard({
       <Flex
         justifyContent="space-between"
         alignItems="flex-start"
+        flexWrap={"wrap"}
         pr="2"
         pt="3"
         pb="2"
