@@ -5,14 +5,17 @@ import axios from "axios";
 export const AuthContext = createContext();
 
 export default function AuthContextProvider({ children }) {
-  const [isAuth, setAuthStatus] = useState(false);
-  const [token, setToken] = useState(null);
+  const [isAuth, setAuthStatus] = useState(
+    localStorage.getItem("isLoggedIn") || false
+  );
+  const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [registered, setRegistrationStatus] = useState(false);
   const [location, setLocation] = useState("");
 
   const loginUser = (userCredential) => {
+    // old - https://reqres.in/api/login
     axios
-      .post("https://reqres.in/api/login", {
+      .post("https://zoomcar-api-two.vercel.app/login", {
         email: userCredential.email,
         password: userCredential.password,
       })
@@ -20,11 +23,9 @@ export default function AuthContextProvider({ children }) {
         alert("Logged In Successfully");
         setAuthStatus(true);
         setToken(res.data.token);
-        let loggedIn = localStorage.getItem("isLoggedIn");
-        if (loggedIn === undefined) {
-          localStorage.setItem("isLoggedIn", true);
-        }
+        // set token in local storage
         localStorage.setItem("isLoggedIn", true);
+        localStorage.setItem("token", res.data.token);
       })
       .catch((err) => {
         alert("invalid email or password");
@@ -33,8 +34,10 @@ export default function AuthContextProvider({ children }) {
   };
 
   const registerUser = (userDetails) => {
+    // old - https://reqres.in/api/register
     axios
-      .post("https://reqres.in/api/register", {
+      .post("https://zoomcar-api-two.vercel.app/register", {
+        name: userDetails.name,
         email: userDetails.email,
         password: userDetails.password,
       })
@@ -56,13 +59,14 @@ export default function AuthContextProvider({ children }) {
   const logOutUser = () => {
     setAuthStatus(false);
     setToken(null);
-    localStorage.setItem("isLoggedIn", false);
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("token");
   };
 
   const changeLocation = (newLocation) => {
     setLocation(newLocation);
   };
-  
+
   return (
     <AuthContext.Provider
       value={{
