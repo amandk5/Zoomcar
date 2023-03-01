@@ -19,6 +19,7 @@ export default function CarCard({
   delete_id,
   cancelBooking,
   addToBooking,
+  carId,
 }) {
   const carObj = {
     image: image,
@@ -97,7 +98,7 @@ export default function CarCard({
               fontWeight="medium"
               onClick={() => {
                 if (isAuth && LoggedInStatusLS) {
-                  addToBooking({ ...carObj });
+                  addToBooking(carId);
                 } else {
                   alert("You need to login first");
                 }

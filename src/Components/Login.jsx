@@ -43,7 +43,7 @@ export default function Login() {
   const LoggedInStatusLS = localStorage.getItem("isLoggedIn");
 
   useEffect(() => {
-    console.log(state);
+    // console.log(state);
   }, [state]);
 
   if (isAuth && LoggedInStatusLS) {

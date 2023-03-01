@@ -7,7 +7,16 @@ import CarCard from "../Components/CarCard";
 import Navbar from "../Components/Navbar";
 
 const getBookingsData = async () => {
-  return await axios.get("https://json-server-p1rm.onrender.com/bookings");
+  // get token from ls
+  let token = localStorage.getItem("token");
+
+  return await axios.get("https://zoomcar-api-two.vercel.app/show-bookings", {
+    headers: {
+      token: token,
+    },
+  });
+  // old
+  // return await axios.get("https://json-server-p1rm.onrender.com/bookings");
 };
 
 export default function BookingsPage() {
@@ -18,16 +27,46 @@ export default function BookingsPage() {
   }, []);
 
   const fetchAndUpdateCarData = () => {
-    getBookingsData().then((res) => setData(res.data));
+    getBookingsData().then((res) => {
+      let data = res.data;
+      setData(data);
+      // console.log(data);
+    });
   };
 
-  const cancelBooking = async (id) => {
+  const cancelBooking = async (carId) => {
+    // get token from ls
+    let token = localStorage.getItem("token");
+    // console.log(carId);
     return await axios
-      .delete(`https://json-server-p1rm.onrender.com/bookings/${id}`)
-      .then(() => {
-        alert("Booking Cancellation Successful");
+      .post(
+        "https://zoomcar-api-two.vercel.app/cancel-booking",
+        {
+          car_id: carId,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+        }
+      )
+      .then((res) => {
+        alert("Booking cancellation successful");
+        // update the page
         fetchAndUpdateCarData();
+      })
+      .catch((err) => {
+        alert("booking cancellation failed");
       });
+
+    // old one
+    // return await axios
+    //   .delete(`https://json-server-p1rm.onrender.com/bookings/${id}`)
+    //   .then(() => {
+    //     alert("Booking Cancellation Successful");
+    //     fetchAndUpdateCarData();
+    //   });
   };
 
   return (
@@ -41,7 +80,7 @@ export default function BookingsPage() {
         <Box maxH="500px" overflow="auto">
           {carData.map((car) => (
             <CarCard
-              key={car.id}
+              key={car._id}
               image={car.image}
               name={car.name}
               transmission={car.transmission}
@@ -53,7 +92,7 @@ export default function BookingsPage() {
               discount_price={car.discount_price}
               original_price={car.original_price}
               isBooked={true}
-              delete_id={car.id}
+              delete_id={car._id}
               cancelBooking={cancelBooking}
             />
           ))}

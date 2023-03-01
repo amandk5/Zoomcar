@@ -16,6 +16,7 @@ export default function SmallScreenCarCard({
   original_price,
   isBooked,
   delete_id,
+  carId,
   cancelBooking,
   addToBooking,
 }) {
@@ -83,7 +84,7 @@ export default function SmallScreenCarCard({
             fontWeight="medium"
             onClick={() => {
               if (isAuth && LoggedInStatusLS) {
-                addToBooking({ ...carObj });
+                addToBooking(carId);
               } else {
                 alert("You need to login first");
               }

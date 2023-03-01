@@ -1,5 +1,5 @@
 import { Box, Flex, Text, useMediaQuery } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { GoPrimitiveDot } from "react-icons/go";
 import { BsArrowRight } from "react-icons/bs";
 import SortAndFilters from "../Components/SortAndFilters";
@@ -10,28 +10,63 @@ import Navbar from "../Components/Navbar";
 import axios from "axios";
 import SmallScreenCarCard from "../Components/SmallScreenCarCard";
 
-const addToBooking = (carObj) => {
-  return axios
-    .post(`https://json-server-p1rm.onrender.com/bookings`, {
-      image: carObj.image,
-      name: carObj.name,
-      transmission: carObj.transmission,
-      fuel: carObj.fuel,
-      seats: carObj.seats,
-      ratings: carObj.ratings,
-      kms: carObj.kms,
-      address: carObj.address,
-      discount_price: carObj.discount_price,
-      original_price: carObj.original_price,
+const addToBooking = async (carId) => {
+  // get token from ls
+  let token = localStorage.getItem("token");
+
+  await axios
+    .post(
+      "https://zoomcar-api-two.vercel.app/booking",
+      {
+        car_id: carId,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+      }
+    )
+    .then((res) => {
+      alert("car booking successful");
     })
-    .then(() => {
-      alert("booking successful");
+    .catch((err) => {
+      console.log(err);
     });
+  // old
+  // return axios
+  //   .post(`https://json-server-p1rm.onrender.com/bookings`, {
+  //     image: carObj.image,
+  //     name: carObj.name,
+  //     transmission: carObj.transmission,
+  //     fuel: carObj.fuel,
+  //     seats: carObj.seats,
+  //     ratings: carObj.ratings,
+  //     kms: carObj.kms,
+  //     address: carObj.address,
+  //     discount_price: carObj.discount_price,
+  //     original_price: carObj.original_price,
+  //   })
+  //   .then(() => {
+  //     alert("booking successful");
+  //   });
 };
 
 export default function ResultsPage() {
   const [isSmallerThan950] = useMediaQuery("(max-width: 950px)");
   const [isSmallerThan650] = useMediaQuery("(max-width: 650px)");
+
+  // for storing cars data
+  const [carsArray, setCarsArray] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("https://zoomcar-api-two.vercel.app/cars")
+      .then((res) => {
+        setCarsArray(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <>
@@ -94,9 +129,9 @@ export default function ResultsPage() {
             overflow={!isSmallerThan650 && "auto"}
           >
             {!isSmallerThan650
-              ? carData.map((car) => (
+              ? carsArray.map((car) => (
                   <CarCard
-                    key={car.id}
+                    key={car._id}
                     image={car.image}
                     name={car.name}
                     transmission={car.transmission}
@@ -107,12 +142,13 @@ export default function ResultsPage() {
                     address={car.address}
                     discount_price={car.discount_price}
                     original_price={car.original_price}
+                    carId={car._id}
                     addToBooking={addToBooking}
                   />
                 ))
-              : carData.map((car) => (
+              : carsArray.map((car) => (
                   <SmallScreenCarCard
-                    key={car.id}
+                    key={car._id}
                     image={car.image}
                     name={car.name}
                     transmission={car.transmission}
@@ -123,6 +159,7 @@ export default function ResultsPage() {
                     address={car.address}
                     discount_price={car.discount_price}
                     original_price={car.original_price}
+                    carId={car._id}
                     addToBooking={addToBooking}
                   />
                 ))}
