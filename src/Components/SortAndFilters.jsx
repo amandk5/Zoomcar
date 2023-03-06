@@ -14,7 +14,7 @@ import {
   SliderTrack,
   Text,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { MdOutlineDirectionsCar } from "react-icons/md";
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
@@ -24,17 +24,47 @@ import { TbManualGearbox, TbRoad } from "react-icons/tb";
 
 import CarAgeSlider from "./CarAgeSlider";
 import CarKmRunSlider from "./CarKmRunSlider";
+import axios from "axios";
 
-export default function SortAndFilters() {
+export default function SortAndFilters({ handleFilteredCars }) {
+  // function to get filtered cars from database
+  const [currentSelected, setCurrentSelected] = useState("");
+
+  const getFilteredCars = async (carType) => {
+    let cars = await axios
+      .get(`https://zoomcar-api-two.vercel.app/cars/${carType}`)
+      .then((res) => res.data)
+      .catch((err) => "error");
+
+    if (cars !== "error") {
+      // send the filtered data to results page
+      handleFilteredCars(cars);
+    }
+  };
+
+  // reset filter function
+  const resetFilters = () => {
+    handleFilteredCars("");
+    // set setCurrentSelected to ""
+    setCurrentSelected("");
+  };
+
   return (
     <Box w="28%" px="3" py="3" bg="white" borderRadius="0.25rem" shadow="base">
       <Flex alignItems="center" justifyContent="space-between" mb="2">
         <Text fontSize="18px" fontWeight="bold">
           Sort And Filters{" "}
         </Text>
-        <Text fontSize="15px" fontWeight="bold" color="green">
-          RESET
-        </Text>
+        {currentSelected !== "" && (
+          <Text
+            fontSize="15px"
+            fontWeight="bold"
+            color="green"
+            onClick={resetFilters}
+          >
+            RESET
+          </Text>
+        )}
       </Flex>
       <Text align="left" mb="1" fontSize="13px">
         Sort by
@@ -187,11 +217,21 @@ export default function SortAndFilters() {
             bg="white"
             border="1px solid gainsboro"
             borderRadius="0.25rem"
+            onClick={() => {
+              getFilteredCars("hatchback");
+              setCurrentSelected("hatchback");
+            }}
+            background={currentSelected === "hatchback" && "black"}
+            color={currentSelected === "hatchback" && "white"}
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/6643/6643477.png"
               alt="hatchback"
-              style={{ width: "30px", margin: "auto" }}
+              style={{
+                width: "30px",
+                margin: "auto",
+                background: "white",
+              }}
             />
             <Text fontSize="13px">Hatchback</Text>
           </GridItem>
@@ -203,11 +243,17 @@ export default function SortAndFilters() {
             bg="white"
             border="1px solid gainsboro"
             borderRadius="0.25rem"
+            onClick={() => {
+              getFilteredCars("sedan");
+              setCurrentSelected("sedan");
+            }}
+            background={currentSelected === "sedan" && "black"}
+            color={currentSelected === "sedan" && "white"}
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/3202/3202003.png"
               alt="sedan"
-              style={{ width: "30px", margin: "auto" }}
+              style={{ width: "30px", margin: "auto", background: "white" }}
             />
             <Text fontSize="13px">Sedan</Text>
           </GridItem>
@@ -219,11 +265,17 @@ export default function SortAndFilters() {
             bg="white"
             border="1px solid gainsboro"
             borderRadius="0.25rem"
+            onClick={() => {
+              getFilteredCars("suv");
+              setCurrentSelected("suv");
+            }}
+            background={currentSelected === "suv" && "black"}
+            color={currentSelected === "suv" && "white"}
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/3097/3097137.png"
               alt="suv"
-              style={{ width: "30px", margin: "auto" }}
+              style={{ width: "30px", margin: "auto", background: "white" }}
             />
             <Text fontSize="13px">SUV</Text>
           </GridItem>
@@ -235,11 +287,17 @@ export default function SortAndFilters() {
             bg="white"
             border="1px solid gainsboro"
             borderRadius="0.25rem"
+            onClick={() => {
+              getFilteredCars("luxury");
+              setCurrentSelected("luxury");
+            }}
+            background={currentSelected === "luxury" && "black"}
+            color={currentSelected === "luxury" && "white"}
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/4411/4411813.png"
               alt="luxury"
-              style={{ width: "30px", margin: "auto" }}
+              style={{ width: "30px", margin: "auto", background: "white" }}
             />
             <Text fontSize="13px">Luxury</Text>
           </GridItem>

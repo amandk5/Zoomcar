@@ -58,21 +58,51 @@ export default function ResultsPage() {
 
   // for storing cars data
   const [carsArray, setCarsArray] = useState([]);
+  const [filteredCars, setFilteredCars] = useState([]);
 
-  useEffect(() => {
-    axios
+  // function to get cars data
+  const getAllCars = async () => {
+    await axios
       .get("https://zoomcar-api-two.vercel.app/cars")
       .then((res) => {
         setCarsArray(res.data);
       })
       .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    // axios
+    //   .get("https://zoomcar-api-two.vercel.app/cars")
+    //   .then((res) => {
+    //     setCarsArray(res.data);
+    //   })
+    //   .catch((err) => console.log(err));
+    getAllCars();
   }, []);
+
+  // function to handle filter car
+  const handleFilteredCars = (filteredCarsData) => {
+    // console.log(filteredCarsData);
+    // set the carsArray with received filtered cars
+    setCarsArray(filteredCarsData);
+
+    // if filteredCarsData === "" , refetch all cars , run getallcars fn
+    if (filteredCarsData === "") {
+      setCarsArray([]);
+      // , run getallcars fn
+      getAllCars();
+    } else {
+      setCarsArray(filteredCarsData);
+    }
+  };
 
   return (
     <>
       <Navbar />
       <Flex justifyContent="center" gap="4" py="3" flexWrap="wrap" bg="#f5f5f5">
-        {!isSmallerThan950 && <SortAndFilters />}
+        {!isSmallerThan950 && (
+          <SortAndFilters handleFilteredCars={handleFilteredCars} />
+        )}
         {/* car list  */}
         <Box w={!isSmallerThan950 ? "68%" : "95%"}>
           {/* top section */}
