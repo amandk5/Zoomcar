@@ -59,6 +59,19 @@ router.get("/cars", async (req, res) => {
     });
 });
 
+// filter cars based on car Type
+router.get("/get-cars/:type", async (req, res) => {
+  let { type } = req.params;
+  await CarModel.find({ car_type: type })
+    .then((resp) => {
+      res.send(resp);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+  // console.log(type);
+});
+
 // add booking
 router.post("/booking", async (req, res) => {
   const { token } = req.headers;

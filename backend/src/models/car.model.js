@@ -16,6 +16,9 @@ const CarSchema = new Schema({
   seats: {
     type: String,
   },
+  car_type: {
+    type: String,
+  },
   ratings: {
     type: String,
   },
