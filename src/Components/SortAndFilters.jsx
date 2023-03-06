@@ -32,7 +32,7 @@ export default function SortAndFilters({ handleFilteredCars }) {
 
   const getFilteredCars = async (carType) => {
     let cars = await axios
-      .get(`https://zoomcar-api-two.vercel.app/cars/${carType}`)
+      .get(`https://zoomcar-api-two.vercel.app/get-cars/${carType}`)
       .then((res) => res.data)
       .catch((err) => "error");
 
