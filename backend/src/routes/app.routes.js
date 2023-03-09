@@ -62,13 +62,61 @@ router.get("/cars", async (req, res) => {
 // filter cars based on car Type
 router.get("/get-cars/:type", async (req, res) => {
   let { type } = req.params;
-  await CarModel.find({ car_type: type })
-    .then((resp) => {
-      res.send(resp);
-    })
-    .catch((err) => {
-      res.send(err);
-    });
+
+  //set filterType as car_type, fuel_type, seats, transmission based on params;
+
+  let filterType = {};
+  if (
+    type === "suv" ||
+    type === "sedan" ||
+    type === "hatchback" ||
+    type === "luxury"
+  ) {
+    filterType = { car_type: type };
+  } else if (
+    type === "Petrol" ||
+    type === "Diesel" ||
+    type === "CNG" ||
+    type === "Electric"
+  ) {
+    filterType = { fuel: type };
+  } else if (type === "4 Seats" || type === "5 Seats" || type === "7 Seats") {
+    filterType = { seats: type };
+    // console.log(filterType)
+  } else if (type === "Manual" || type === "Automatic") {
+    filterType = { transmission: type };
+  } else if (type === "3" || type === "4" || type === "All") {
+    filterType = { ratings: type };
+    if (type === "All") {
+      // if type is all , send all the car with all ratings
+      await CarModel.find({})
+        .then((resp) => {
+          res.send(resp);
+        })
+        .catch((err) => {
+          res.send(err);
+        });
+    } else {
+      await CarModel.find({ ratings: { $gt: Math.floor(Number(type)) } })
+        .then((resp) => {
+          res.send(resp);
+        })
+        .catch((err) => {
+          res.send(err);
+        });
+    }
+  }
+
+  // if filterType object does not contain "ratings", then
+  if (filterType.ratings === undefined) {
+    await CarModel.find(filterType)
+      .then((resp) => {
+        res.send(resp);
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+  }
   // console.log(type);
 });
 
