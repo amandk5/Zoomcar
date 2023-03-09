@@ -155,7 +155,8 @@ export default function ResultsPage() {
           <br />
           {/* car list data */}
           <Box
-            maxH={!isSmallerThan650 && "500px"}
+            // maxH={!isSmallerThan650 && "500px"}
+            maxH={"83vh"}
             overflow={!isSmallerThan650 && "auto"}
           >
             {!isSmallerThan650
@@ -193,6 +194,7 @@ export default function ResultsPage() {
                     addToBooking={addToBooking}
                   />
                 ))}
+            {carsArray.length === 0 ? <Text m="3">No Cars Found..</Text> : null}
           </Box>
         </Box>
       </Flex>

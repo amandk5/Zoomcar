@@ -30,9 +30,9 @@ export default function SortAndFilters({ handleFilteredCars }) {
   // function to get filtered cars from database
   const [currentSelected, setCurrentSelected] = useState("");
 
-  const getFilteredCars = async (carType) => {
+  const getFilteredCars = async (filterType) => {
     let cars = await axios
-      .get(`https://zoomcar-api-two.vercel.app/get-cars/${carType}`)
+      .get(`https://zoomcar-api-two.vercel.app/get-cars/${filterType}`)
       .then((res) => res.data)
       .catch((err) => "error");
 
@@ -50,7 +50,16 @@ export default function SortAndFilters({ handleFilteredCars }) {
   };
 
   return (
-    <Box w="28%" px="3" py="3" bg="white" borderRadius="0.25rem" shadow="base">
+    <Box
+      w="28%"
+      px="3"
+      py="3"
+      bg="white"
+      borderRadius="0.25rem"
+      shadow="base"
+      maxH={"90vh"}
+      overflow={"auto"}
+    >
       <Flex alignItems="center" justifyContent="space-between" mb="2">
         <Text fontSize="18px" fontWeight="bold">
           Sort And Filters{" "}
@@ -316,11 +325,17 @@ export default function SortAndFilters({ handleFilteredCars }) {
             py="3"
             bg="white"
             border="1px solid gainsboro"
+            onClick={() => {
+              getFilteredCars("4 Seats");
+              setCurrentSelected("4 Seats");
+            }}
+            background={currentSelected === "4 Seats" && "black"}
+            color={currentSelected === "4 Seats" && "white"}
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/5385/5385900.png"
               alt="4 seater"
-              style={{ width: "30px", margin: "auto" }}
+              style={{ width: "30px", margin: "auto", background: "white" }}
             />
             <Text fontSize="13px">4 Seater</Text>
           </GridItem>
@@ -332,11 +347,17 @@ export default function SortAndFilters({ handleFilteredCars }) {
             bg="white"
             border="1px solid gainsboro"
             borderRadius="0.25rem"
+            onClick={() => {
+              getFilteredCars("5 Seats");
+              setCurrentSelected("5 Seats");
+            }}
+            background={currentSelected === "5 Seats" && "black"}
+            color={currentSelected === "5 Seats" && "white"}
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/5385/5385900.png"
               alt="5 seater"
-              style={{ width: "30px", margin: "auto" }}
+              style={{ width: "30px", margin: "auto", background: "white" }}
             />
             <Text fontSize="13px">5 Seater</Text>
           </GridItem>
@@ -348,11 +369,17 @@ export default function SortAndFilters({ handleFilteredCars }) {
             bg="white"
             border="1px solid gainsboro"
             borderRadius="0.25rem"
+            onClick={() => {
+              getFilteredCars("7 Seats");
+              setCurrentSelected("7 Seats");
+            }}
+            background={currentSelected === "7 Seats" && "black"}
+            color={currentSelected === "7 Seats" && "white"}
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/5385/5385900.png"
               alt="7 seater"
-              style={{ width: "30px", margin: "auto" }}
+              style={{ width: "30px", margin: "auto", background: "white" }}
             />
             <Text fontSize="13px">7 Seater</Text>
           </GridItem>
@@ -372,11 +399,17 @@ export default function SortAndFilters({ handleFilteredCars }) {
             bg="white"
             border="1px solid gainsboro"
             borderRadius="0.25rem"
+            onClick={() => {
+              getFilteredCars("Petrol");
+              setCurrentSelected("Petrol");
+            }}
+            background={currentSelected === "Petrol" && "black"}
+            color={currentSelected === "Petrol" && "white"}
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/4433/4433018.png"
               alt="Petrol"
-              style={{ width: "30px", margin: "auto" }}
+              style={{ width: "30px", margin: "auto", background: "white" }}
             />
             <Text fontSize="13px">Petrol</Text>
           </GridItem>
@@ -388,11 +421,17 @@ export default function SortAndFilters({ handleFilteredCars }) {
             bg="white"
             border="1px solid gainsboro"
             borderRadius="0.25rem"
+            onClick={() => {
+              getFilteredCars("Diesel");
+              setCurrentSelected("Diesel");
+            }}
+            background={currentSelected === "Diesel" && "black"}
+            color={currentSelected === "Diesel" && "white"}
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/4433/4433018.png"
               alt="Diesel"
-              style={{ width: "30px", margin: "auto" }}
+              style={{ width: "30px", margin: "auto", background: "white" }}
             />
             <Text fontSize="13px">Diesel</Text>
           </GridItem>
@@ -404,11 +443,17 @@ export default function SortAndFilters({ handleFilteredCars }) {
             bg="white"
             border="1px solid gainsboro"
             borderRadius="0.25rem"
+            onClick={() => {
+              getFilteredCars("CNG");
+              setCurrentSelected("CNG");
+            }}
+            background={currentSelected === "CNG" && "black"}
+            color={currentSelected === "CNG" && "white"}
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/481/481233.png"
               alt="cng"
-              style={{ width: "30px", margin: "auto" }}
+              style={{ width: "30px", margin: "auto", background: "white" }}
             />
             <Text fontSize="13px">CNG</Text>
           </GridItem>
@@ -420,11 +465,17 @@ export default function SortAndFilters({ handleFilteredCars }) {
             bg="white"
             border="1px solid gainsboro"
             borderRadius="0.25rem"
+            onClick={() => {
+              getFilteredCars("Electric");
+              setCurrentSelected("Electric");
+            }}
+            background={currentSelected === "Electric" && "black"}
+            color={currentSelected === "Electric" && "white"}
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/2087/2087628.png"
               alt="electric"
-              style={{ width: "30px", margin: "auto" }}
+              style={{ width: "30px", margin: "auto", background: "white" }}
             />
             <Text fontSize="13px">Electric</Text>
           </GridItem>
@@ -444,6 +495,12 @@ export default function SortAndFilters({ handleFilteredCars }) {
             bg="white"
             border="1px solid gainsboro"
             borderRadius="0.25rem"
+            onClick={() => {
+              getFilteredCars("Manual");
+              setCurrentSelected("Manual");
+            }}
+            background={currentSelected === "Manual" && "black"}
+            color={currentSelected === "Manual" && "white"}
           >
             <TbManualGearbox style={{ margin: "auto" }} />
             <Text fontSize="13px">Manual</Text>
@@ -456,6 +513,12 @@ export default function SortAndFilters({ handleFilteredCars }) {
             bg="white"
             border="1px solid gainsboro"
             borderRadius="0.25rem"
+            onClick={() => {
+              getFilteredCars("Automatic");
+              setCurrentSelected("Automatic");
+            }}
+            background={currentSelected === "Automatic" && "black"}
+            color={currentSelected === "Automatic" && "white"}
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/2579/2579085.png"
@@ -480,6 +543,12 @@ export default function SortAndFilters({ handleFilteredCars }) {
             bg="white"
             border="1px solid gainsboro"
             borderRadius="0.25rem"
+            onClick={() => {
+              getFilteredCars("3");
+              setCurrentSelected("3");
+            }}
+            background={currentSelected === "3" && "black"}
+            color={currentSelected === "3" && "white"}
           >
             <Text fontSize="13px">3+ rated</Text>
           </GridItem>
@@ -491,6 +560,12 @@ export default function SortAndFilters({ handleFilteredCars }) {
             bg="white"
             border="1px solid gainsboro"
             borderRadius="0.25rem"
+            onClick={() => {
+              getFilteredCars("4");
+              setCurrentSelected("4");
+            }}
+            background={currentSelected === "4" && "black"}
+            color={currentSelected === "4" && "white"}
           >
             <Text fontSize="13px">4+ rated</Text>
           </GridItem>
@@ -502,6 +577,12 @@ export default function SortAndFilters({ handleFilteredCars }) {
             bg="white"
             border="1px solid gainsboro"
             borderRadius="0.25rem"
+            onClick={() => {
+              getFilteredCars("All");
+              setCurrentSelected("All");
+            }}
+            background={currentSelected === "All" && "black"}
+            color={currentSelected === "All" && "white"}
           >
             <Text fontSize="13px">All</Text>
           </GridItem>
