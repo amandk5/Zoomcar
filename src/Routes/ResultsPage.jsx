@@ -55,6 +55,7 @@ const addToBooking = async (carId) => {
 export default function ResultsPage() {
   const [isSmallerThan950] = useMediaQuery("(max-width: 950px)");
   const [isSmallerThan650] = useMediaQuery("(max-width: 650px)");
+  const [sortOrFilterApplied, setSortOrFilterApplied] = useState(false);
 
   // for storing cars data
   const [carsArray, setCarsArray] = useState([]);
@@ -66,19 +67,87 @@ export default function ResultsPage() {
       .get("https://zoomcar-api-two.vercel.app/cars")
       .then((res) => {
         setCarsArray(res.data);
+        console.log(res.data);
       })
       .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
-    // axios
-    //   .get("https://zoomcar-api-two.vercel.app/cars")
-    //   .then((res) => {
-    //     setCarsArray(res.data);
-    //   })
-    //   .catch((err) => console.log(err));
-    getAllCars();
-  }, []);
+  // function to display searched car
+  const displaySearchedCar = async (carName) => {
+    // search for cars through api and update the results
+    if (carName !== "") {
+      let data = await axios
+        .get(`https://zoomcar-api-two.vercel.app/search/${carName}`)
+        .then(
+          (res) =>
+            // update carsArray
+            res.data
+        )
+        .catch((err) => "error");
+
+      if (typeof data === "object") {
+        console.log(data);
+        let car = [data];
+        setCarsArray(car);
+      } else {
+        setCarsArray([]);
+      }
+    }
+  };
+
+  // function to handle sorted cars
+  const handleSortedCars = (sortType) => {
+    // console.log(sortType);
+    // relevance,lowToHigh,highToLow,bestRated,distance,carAge,kmsDriven,popularity
+    // for relevance do nothing
+    let sortedCars = [...carsArray];
+    if (sortType === "lowToHigh") {
+      sortedCars.sort(
+        (a, b) => Number(a.discount_price) - Number(b.discount_price)
+      );
+      // update carsArray
+      setCarsArray(sortedCars);
+    } else if (sortType === "highToLow") {
+      sortedCars.sort(
+        (a, b) => Number(b.discount_price) - Number(a.discount_price)
+      );
+      // update carsArray
+      setCarsArray(sortedCars);
+    } else if (sortType === "bestRated" || sortType === "popularity") {
+      sortedCars.sort(
+        (a, b) =>
+          Number(b.ratings.split(" ")[0]) - Number(a.ratings.split(" ")[0])
+      );
+      // update carsArray
+      setCarsArray(sortedCars);
+    } else if (sortType === "distance") {
+      sortedCars.sort(
+        (a, b) =>
+          Number(a.address.split(" ")[0]) - Number(b.address.split(" ")[0])
+      );
+      // update carsArray
+      setCarsArray(sortedCars);
+    } else if (sortType === "kmsDriven" || sortType === "carAge") {
+      sortedCars.sort((a, b) => {
+        let d1 = a.kms.split(" ")[0].split("");
+        let d11 = [...d1];
+        d11.pop();
+        d11 = d11.join("");
+        d1 = Number(d11);
+
+        let d2 = b.kms.split(" ")[0].split("");
+        let d22 = [...d2];
+        d22.pop();
+        d22 = d22.join("");
+        d2 = Number(d22);
+
+        // console.log(d1, d2);
+        return d1 - d2;
+      });
+      // update carsArray
+      setCarsArray(sortedCars);
+    }
+  };
 
   // function to handle filter car
   const handleFilteredCars = (filteredCarsData) => {
@@ -96,12 +165,84 @@ export default function ResultsPage() {
     }
   };
 
+  // function to filter car based on car age using slider
+  const filterCarByAgeUsingSlider = async (carAge) => {
+    console.log(carAge);
+    // make an api request to get all cars and perform filtering
+    let data = await axios
+      .get("https://zoomcar-api-two.vercel.app/cars")
+      .then((res) => res.data)
+      .catch((err) => "error");
+
+    if (data !== "error") {
+      let cars = [];
+      data.forEach((c) => {
+        let d1 = c.kms.split(" ")[0].split("");
+        let d11 = [...d1];
+        d11.pop();
+        d11 = d11.join("");
+        d1 = Number(d11);
+        if (d1 <= carAge) {
+          cars.push(c);
+        }
+      });
+
+      // update carsArray
+      setCarsArray(cars);
+    }
+  };
+
+  // function to filter car based on kms run using slider
+  const filterCarByKmsUsingSlider = async (kmsRun) => {
+    console.log(kmsRun);
+    // make an api request to get all cars and perform filtering
+    let data = await axios
+      .get("https://zoomcar-api-two.vercel.app/cars")
+      .then((res) => res.data)
+      .catch((err) => "error");
+
+    if (data !== "error") {
+      let cars = [];
+      data.forEach((c) => {
+        let d1 = c.kms.split(" ")[0].split("");
+        let d11 = [...d1];
+        d11.pop();
+        d11 = d11.join("");
+        d1 = Number(d11);
+        if (d1 <= kmsRun) {
+          cars.push(c);
+        }
+      });
+
+      // update carsArray
+      setCarsArray(cars);
+    }
+  };
+
+  useEffect(() => {
+    // axios
+    //   .get("https://zoomcar-api-two.vercel.app/cars")
+    //   .then((res) => {
+    //     setCarsArray(res.data);
+    //   })
+    //   .catch((err) => console.log(err));
+    getAllCars();
+  }, []);
+
   return (
     <>
       <Navbar />
       <Flex justifyContent="center" gap="4" py="3" flexWrap="wrap" bg="#f5f5f5">
         {!isSmallerThan950 && (
-          <SortAndFilters handleFilteredCars={handleFilteredCars} />
+          <SortAndFilters
+            handleFilteredCars={handleFilteredCars}
+            handleSortedCars={handleSortedCars}
+            displaySearchedCar={displaySearchedCar}
+            sortOrFilterApplied={sortOrFilterApplied}
+            setSortOrFilterApplied={setSortOrFilterApplied}
+            filterCarByAgeUsingSlider={filterCarByAgeUsingSlider}
+            filterCarByKmsUsingSlider={filterCarByKmsUsingSlider}
+          />
         )}
         {/* car list  */}
         <Box w={!isSmallerThan950 ? "68%" : "95%"}>

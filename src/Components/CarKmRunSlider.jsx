@@ -5,13 +5,25 @@ import {
   SliderThumb,
   SliderTrack,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function CarKmRunSlider() {
-  const [sliderValue, setSliderValue] = useState(50);
+export default function CarKmRunSlider({
+  defaultValue,
+  handleCarKmsRunSlider,
+}) {
+  const [sliderValue, setSliderValue] = useState(defaultValue);
+
+  useEffect(() => {
+    handleCarKmsRunSlider(sliderValue);
+  }, [sliderValue]);
+
   return (
     <Box p="2">
-      <Slider aria-label="slider-ex-6" onChange={(val) => setSliderValue(val)}>
+      <Slider
+        aria-label="slider-ex-6"
+        onChange={(val) => setSliderValue(val)}
+        defaultValue={sliderValue}
+      >
         <SliderTrack>
           <SliderFilledTrack />
         </SliderTrack>

@@ -14,7 +14,7 @@ import {
   SliderTrack,
   Text,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { MdOutlineDirectionsCar } from "react-icons/md";
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
@@ -26,10 +26,35 @@ import CarAgeSlider from "./CarAgeSlider";
 import CarKmRunSlider from "./CarKmRunSlider";
 import axios from "axios";
 
-export default function SortAndFilters({ handleFilteredCars }) {
-  // function to get filtered cars from database
+export default function SortAndFilters({
+  handleFilteredCars,
+  handleSortedCars,
+  displaySearchedCar,
+  sortOrFilterApplied,
+  setSortOrFilterApplied,
+  filterCarByAgeUsingSlider,
+  filterCarByKmsUsingSlider,
+}) {
   const [currentSelected, setCurrentSelected] = useState("");
+  const [currentSortType, setCurrentSortType] = useState("");
+  const [searchedName, setSearchedName] = useState("");
+  const [car_age, set_car_age] = useState(100);
+  const [kms_run, set_kms_run] = useState(100);
 
+  // function to handle search car by name
+  const handleSearchCar = (e) => {
+    setSearchedName(e.target.value);
+    // set setSortOrFilterApplied to true
+    setSortOrFilterApplied(true);
+  };
+
+  // function to get sort type and pass it to handleSortedCars
+  const getSortType = (sortType) => {
+    // pass sortType to handleSortedCars
+    handleSortedCars(sortType);
+  };
+
+  // function to get filtered cars from database
   const getFilteredCars = async (filterType) => {
     let cars = await axios
       .get(`https://zoomcar-api-two.vercel.app/get-cars/${filterType}`)
@@ -42,12 +67,54 @@ export default function SortAndFilters({ handleFilteredCars }) {
     }
   };
 
+  // function to handle car age with slider
+  const handleCarAgeSlider = (carAge) => {
+    set_car_age(carAge);
+  };
+
+  // function to handle kms run with slider
+  const handleCarKmsRunSlider = (kmsRun) => {
+    set_kms_run(kmsRun);
+  };
+
   // reset filter function
   const resetFilters = () => {
     handleFilteredCars("");
     // set setCurrentSelected to ""
     setCurrentSelected("");
+    // set setCurrentSortType to ""
+    setCurrentSortType("");
   };
+
+  useEffect(() => {
+    const showSearchedName = setTimeout(() => {
+      // console.log(searchedName);
+      // after 1sec pass the name to displaySearchedCar
+      displaySearchedCar(searchedName);
+    }, 1000);
+
+    return () => clearTimeout(showSearchedName);
+  }, [searchedName]);
+
+  // for update using car age slider
+  useEffect(() => {
+    const carAgeSliderFilteredCars = setTimeout(() => {
+      // after 1sec pass the car_age to filterCarByAgeUsingSlider
+      filterCarByAgeUsingSlider(car_age);
+    }, 1000);
+
+    return () => clearTimeout(carAgeSliderFilteredCars);
+  }, [car_age]);
+
+  // for update using kms run slider
+  useEffect(() => {
+    const kmsRunSliderFilteredCars = setTimeout(() => {
+      // after 1sec pass the kms_run to filterCarByKmsUsingSlider
+      filterCarByKmsUsingSlider(kms_run);
+    }, 1000);
+
+    return () => clearTimeout(kmsRunSliderFilteredCars);
+  }, [kms_run]);
 
   return (
     <Box
@@ -64,12 +131,13 @@ export default function SortAndFilters({ handleFilteredCars }) {
         <Text fontSize="18px" fontWeight="bold">
           Sort And Filters{" "}
         </Text>
-        {currentSelected !== "" && (
+        {(currentSelected !== "" || sortOrFilterApplied === true) && (
           <Text
             fontSize="15px"
             fontWeight="bold"
             color="green"
             onClick={resetFilters}
+            cursor="pointer"
           >
             RESET
           </Text>
@@ -87,6 +155,13 @@ export default function SortAndFilters({ handleFilteredCars }) {
           bg="white"
           border="1px solid gainsboro"
           borderRadius="0.25rem"
+          onClick={() => {
+            getSortType("relevance");
+            setCurrentSortType("relevance");
+          }}
+          background={currentSortType === "relevance" && "black"}
+          color={currentSortType === "relevance" && "white"}
+          cursor="pointer"
         >
           <MdOutlineDirectionsCar style={{ margin: "auto" }} />
           <Text fontSize="13px">Relevance</Text>
@@ -99,6 +174,13 @@ export default function SortAndFilters({ handleFilteredCars }) {
           bg="white"
           border="1px solid gainsboro"
           borderRadius="0.25rem"
+          onClick={() => {
+            getSortType("lowToHigh");
+            setCurrentSortType("lowToHigh");
+          }}
+          background={currentSortType === "lowToHigh" && "black"}
+          color={currentSortType === "lowToHigh" && "white"}
+          cursor="pointer"
         >
           <RiSortDesc style={{ margin: "auto" }} />
           <Text fontSize="13px">Low To High</Text>
@@ -111,6 +193,13 @@ export default function SortAndFilters({ handleFilteredCars }) {
           bg="white"
           border="1px solid gainsboro"
           borderRadius="0.25rem"
+          onClick={() => {
+            getSortType("highToLow");
+            setCurrentSortType("highToLow");
+          }}
+          background={currentSortType === "highToLow" && "black"}
+          color={currentSortType === "highToLow" && "white"}
+          cursor="pointer"
         >
           <RiSortAsc style={{ margin: "auto" }} />
           <Text fontSize="13px">High To Low</Text>
@@ -123,6 +212,13 @@ export default function SortAndFilters({ handleFilteredCars }) {
           bg="white"
           border="1px solid gainsboro"
           borderRadius="0.25rem"
+          onClick={() => {
+            getSortType("bestRated");
+            setCurrentSortType("bestRated");
+          }}
+          background={currentSortType === "bestRated" && "black"}
+          color={currentSortType === "bestRated" && "white"}
+          cursor="pointer"
         >
           <BiStar style={{ margin: "auto" }} />
           <Text fontSize="13px">Best rated</Text>
@@ -138,8 +234,15 @@ export default function SortAndFilters({ handleFilteredCars }) {
           bg="white"
           border="1px solid gainsboro"
           borderRadius="0.25rem"
+          onClick={() => {
+            getSortType("distance");
+            setCurrentSortType("distance");
+          }}
+          background={currentSortType === "distance" && "black"}
+          color={currentSortType === "distance" && "white"}
+          cursor="pointer"
         >
-          <GrLocation style={{ margin: "auto" }} />
+          <GrLocation style={{ margin: "auto", background: "white" }} />
           <Text fontSize="13px">Distance</Text>
         </GridItem>
         <GridItem
@@ -150,8 +253,15 @@ export default function SortAndFilters({ handleFilteredCars }) {
           bg="white"
           border="1px solid gainsboro"
           borderRadius="0.25rem"
+          onClick={() => {
+            getSortType("carAge");
+            setCurrentSortType("carAge");
+          }}
+          background={currentSortType === "carAge" && "black"}
+          color={currentSortType === "carAge" && "white"}
+          cursor="pointer"
         >
-          <GrCar style={{ margin: "auto" }} />
+          <GrCar style={{ margin: "auto", background: "white" }} />
           <Text fontSize="13px">Car age</Text>
         </GridItem>
         <GridItem
@@ -162,6 +272,13 @@ export default function SortAndFilters({ handleFilteredCars }) {
           bg="white"
           border="1px solid gainsboro"
           borderRadius="0.25rem"
+          onClick={() => {
+            getSortType("kmsDriven");
+            setCurrentSortType("kmsDriven");
+          }}
+          background={currentSortType === "kmsDriven" && "black"}
+          color={currentSortType === "kmsDriven" && "white"}
+          cursor="pointer"
         >
           <TbRoad style={{ margin: "auto" }} />
           <Text fontSize="13px">Kms Driven</Text>
@@ -174,8 +291,15 @@ export default function SortAndFilters({ handleFilteredCars }) {
           bg="white"
           border="1px solid gainsboro"
           borderRadius="0.25rem"
+          onClick={() => {
+            getSortType("popularity");
+            setCurrentSortType("popularity");
+          }}
+          background={currentSortType === "popularity" && "black"}
+          color={currentSortType === "popularity" && "white"}
+          cursor="pointer"
         >
-          <GrAnnounce style={{ margin: "auto" }} />
+          <GrAnnounce style={{ margin: "auto", background: "white" }} />
           <Text fontSize="13px">Popularity</Text>
         </GridItem>
       </Grid>
@@ -201,6 +325,8 @@ export default function SortAndFilters({ handleFilteredCars }) {
                 size="xs"
                 fontSize="10px"
                 placeholder='Try Search "Kia Seltos"'
+                value={searchedName}
+                onChange={handleSearchCar}
               />
               <InputRightElement
                 h="100%"
@@ -232,6 +358,7 @@ export default function SortAndFilters({ handleFilteredCars }) {
             }}
             background={currentSelected === "hatchback" && "black"}
             color={currentSelected === "hatchback" && "white"}
+            cursor="pointer"
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/6643/6643477.png"
@@ -258,6 +385,7 @@ export default function SortAndFilters({ handleFilteredCars }) {
             }}
             background={currentSelected === "sedan" && "black"}
             color={currentSelected === "sedan" && "white"}
+            cursor="pointer"
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/3202/3202003.png"
@@ -280,6 +408,7 @@ export default function SortAndFilters({ handleFilteredCars }) {
             }}
             background={currentSelected === "suv" && "black"}
             color={currentSelected === "suv" && "white"}
+            cursor="pointer"
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/3097/3097137.png"
@@ -302,6 +431,7 @@ export default function SortAndFilters({ handleFilteredCars }) {
             }}
             background={currentSelected === "luxury" && "black"}
             color={currentSelected === "luxury" && "white"}
+            cursor="pointer"
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/4411/4411813.png"
@@ -331,6 +461,7 @@ export default function SortAndFilters({ handleFilteredCars }) {
             }}
             background={currentSelected === "4 Seats" && "black"}
             color={currentSelected === "4 Seats" && "white"}
+            cursor="pointer"
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/5385/5385900.png"
@@ -353,6 +484,7 @@ export default function SortAndFilters({ handleFilteredCars }) {
             }}
             background={currentSelected === "5 Seats" && "black"}
             color={currentSelected === "5 Seats" && "white"}
+            cursor="pointer"
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/5385/5385900.png"
@@ -375,6 +507,7 @@ export default function SortAndFilters({ handleFilteredCars }) {
             }}
             background={currentSelected === "7 Seats" && "black"}
             color={currentSelected === "7 Seats" && "white"}
+            cursor="pointer"
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/5385/5385900.png"
@@ -405,6 +538,7 @@ export default function SortAndFilters({ handleFilteredCars }) {
             }}
             background={currentSelected === "Petrol" && "black"}
             color={currentSelected === "Petrol" && "white"}
+            cursor="pointer"
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/4433/4433018.png"
@@ -427,6 +561,7 @@ export default function SortAndFilters({ handleFilteredCars }) {
             }}
             background={currentSelected === "Diesel" && "black"}
             color={currentSelected === "Diesel" && "white"}
+            cursor="pointer"
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/4433/4433018.png"
@@ -449,6 +584,7 @@ export default function SortAndFilters({ handleFilteredCars }) {
             }}
             background={currentSelected === "CNG" && "black"}
             color={currentSelected === "CNG" && "white"}
+            cursor="pointer"
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/481/481233.png"
@@ -471,6 +607,7 @@ export default function SortAndFilters({ handleFilteredCars }) {
             }}
             background={currentSelected === "Electric" && "black"}
             color={currentSelected === "Electric" && "white"}
+            cursor="pointer"
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/2087/2087628.png"
@@ -501,6 +638,7 @@ export default function SortAndFilters({ handleFilteredCars }) {
             }}
             background={currentSelected === "Manual" && "black"}
             color={currentSelected === "Manual" && "white"}
+            cursor="pointer"
           >
             <TbManualGearbox style={{ margin: "auto" }} />
             <Text fontSize="13px">Manual</Text>
@@ -519,11 +657,12 @@ export default function SortAndFilters({ handleFilteredCars }) {
             }}
             background={currentSelected === "Automatic" && "black"}
             color={currentSelected === "Automatic" && "white"}
+            cursor="pointer"
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/2579/2579085.png"
               alt="automatic"
-              style={{ width: "30px", margin: "auto" }}
+              style={{ width: "30px", margin: "auto", background: "white" }}
             />
             <Text fontSize="13px">Automatic</Text>
           </GridItem>
@@ -549,6 +688,7 @@ export default function SortAndFilters({ handleFilteredCars }) {
             }}
             background={currentSelected === "3" && "black"}
             color={currentSelected === "3" && "white"}
+            cursor="pointer"
           >
             <Text fontSize="13px">3+ rated</Text>
           </GridItem>
@@ -566,6 +706,7 @@ export default function SortAndFilters({ handleFilteredCars }) {
             }}
             background={currentSelected === "4" && "black"}
             color={currentSelected === "4" && "white"}
+            cursor="pointer"
           >
             <Text fontSize="13px">4+ rated</Text>
           </GridItem>
@@ -583,6 +724,7 @@ export default function SortAndFilters({ handleFilteredCars }) {
             }}
             background={currentSelected === "All" && "black"}
             color={currentSelected === "All" && "white"}
+            cursor="pointer"
           >
             <Text fontSize="13px">All</Text>
           </GridItem>
@@ -591,16 +733,22 @@ export default function SortAndFilters({ handleFilteredCars }) {
       {/* kms run  */}
       <Box py="3" borderBottom="1px solid gainsboro">
         <Text align="left" mb="1" fontSize="13px">
-          Kms run
+          Kms run (k)
         </Text>
-        <CarKmRunSlider />
+        <CarKmRunSlider
+          defaultValue={100}
+          handleCarKmsRunSlider={handleCarKmsRunSlider}
+        />
       </Box>
       {/* car age  */}
       <Box py="3" borderBottom="1px solid gainsboro">
         <Text align="left" mb="1" fontSize="13px">
           Car Age
         </Text>
-        <CarAgeSlider />
+        <CarAgeSlider
+          defaultValue={100}
+          handleCarAgeSlider={handleCarAgeSlider}
+        />
       </Box>
     </Box>
   );
