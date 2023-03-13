@@ -59,6 +59,15 @@ router.get("/cars", async (req, res) => {
     });
 });
 
+// sort cars by sort type provided
+router.get("/search/:car", async (req, res) => {
+  let { car } = req.params;
+  // search car in db
+  await CarModel.findOne({ name: { $regex: `${car}`, $options: "i" } })
+    .then((resp) => res.send(resp))
+    .catch((err) => res.send(err));
+});
+
 // filter cars based on car Type
 router.get("/get-cars/:type", async (req, res) => {
   let { type } = req.params;
