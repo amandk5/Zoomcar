@@ -59,7 +59,7 @@ router.get("/cars", async (req, res) => {
     });
 });
 
-// sort cars by sort type provided
+// search cars by car name provided
 router.get("/search/:car", async (req, res) => {
   let { car } = req.params;
   // search car in db
