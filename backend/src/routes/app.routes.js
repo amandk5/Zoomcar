@@ -5,6 +5,10 @@ const UserModel = require("../models/user.model");
 const CarModel = require("../models/car.model");
 const BookingModel = require("../models/booking.model");
 const { db } = require("../models/user.model");
+const axios = require("axios");
+
+// access/api key for position stack
+const POSITIONSTACK_ACCESS_KEY = process.env.POSITIONSTACK_ACCESS_KEY;
 
 // home page
 router.get("/", (req, res) => {
@@ -241,6 +245,31 @@ router.post("/cancel-booking", async (req, res) => {
     .catch((err) => {
       res.send(err);
     });
+});
+
+// get user location, get latitude and longitude
+router.get("/user/location", async (req, res) => {
+  // get latitude and longitude from req.query
+  const { latitude, longitude } = req.query;
+
+  // once latitude and longitude received, make a get request to positionstack to get
+  // the location
+  if (latitude !== undefined && longitude !== undefined) {
+    await axios
+      .get(
+        `http://api.positionstack.com/v1/reverse?access_key=${POSITIONSTACK_ACCESS_KEY}&query=21.2514,81.6296`
+      )
+      .then((resp) => {
+        let data = resp.data.data;
+        // get locality from data[0]
+        let location = [...data][0].locality;
+        // console.log(location);
+        res.status(200).send({ location: location });
+      })
+      .catch((err) => console.log(err));
+  } else {
+    res.status(401).send({ error: "failed to get the location" });
+  }
 });
 
 module.exports = router;
