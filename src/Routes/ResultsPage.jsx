@@ -60,8 +60,7 @@ export default function ResultsPage() {
   const [sortOrFilterApplied, setSortOrFilterApplied] = useState(false);
 
   // to handle select location modal box
-  // const { isChangeCityLinkClicked, setIsChangeCityLinkClicked } =
-  //   useContext(AuthContext);
+  const { location } = useContext(AuthContext);
   const [openModal, setModalStatus] = useState(false);
 
   // for storing cars data
@@ -272,6 +271,7 @@ export default function ResultsPage() {
                 <Box bgGradient="linear(to-r, green.50, green.50)">
                   <GoPrimitiveDot color="teal" />
                 </Box>
+                <Box>{location !== "" && `${location}, `} </Box>
                 <Box>Pick Up City, Airport, Address Or Hotel</Box>
               </Flex>
               <Flex
