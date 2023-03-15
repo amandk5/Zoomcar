@@ -19,7 +19,6 @@ import { GoPrimitiveDot } from "react-icons/go";
 import { TbCurrentLocation } from "react-icons/tb";
 import { VscLocation } from "react-icons/vsc";
 import { AuthContext } from "../Context/AuthContextProvider";
-import GetLocation from "./GetLocation";
 import axios from "axios";
 import Map from "./Map";
 
@@ -74,7 +73,7 @@ export default function SelectLocation({ openModal, setModalStatus }) {
       const updateLocation = async () => {
         await axios
           .get(
-            `http://localhost:8080/user/location?latitude=${latitude}&longitude=${longitude}`
+            `https://zoomcar-api-two.vercel.app/user/location?latitude=${latitude}&longitude=${longitude}`
           )
           .then((res) => {
             // console.log(res.data);
