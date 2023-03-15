@@ -1,5 +1,5 @@
 import { Box, Flex, Text, useMediaQuery } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { GoPrimitiveDot } from "react-icons/go";
 import { BsArrowRight } from "react-icons/bs";
 import SortAndFilters from "../Components/SortAndFilters";
@@ -9,6 +9,8 @@ import carData from "../Db/db.json";
 import Navbar from "../Components/Navbar";
 import axios from "axios";
 import SmallScreenCarCard from "../Components/SmallScreenCarCard";
+import { AuthContext } from "../Context/AuthContextProvider";
+import SelectLocation from "../Components/SelectLocation";
 
 const addToBooking = async (carId) => {
   // get token from ls
@@ -56,6 +58,11 @@ export default function ResultsPage() {
   const [isSmallerThan950] = useMediaQuery("(max-width: 950px)");
   const [isSmallerThan650] = useMediaQuery("(max-width: 650px)");
   const [sortOrFilterApplied, setSortOrFilterApplied] = useState(false);
+
+  // to handle select location modal box
+  // const { isChangeCityLinkClicked, setIsChangeCityLinkClicked } =
+  //   useContext(AuthContext);
+  const [openModal, setModalStatus] = useState(false);
 
   // for storing cars data
   const [carsArray, setCarsArray] = useState([]);
@@ -258,11 +265,14 @@ export default function ResultsPage() {
                 fontSize="13px"
                 borderRadius="0.25rem"
                 cursor="pointer"
+                onClick={() => {
+                  setModalStatus(true);
+                }}
               >
                 <Box bgGradient="linear(to-r, green.50, green.50)">
                   <GoPrimitiveDot color="teal" />
                 </Box>
-                <Box>Pick Up CIty, Airport, Address Or Hotel</Box>
+                <Box>Pick Up City, Airport, Address Or Hotel</Box>
               </Flex>
               <Flex
                 bg="white"
@@ -339,6 +349,10 @@ export default function ResultsPage() {
           </Box>
         </Box>
       </Flex>
+      {
+        // open modal
+        <SelectLocation openModal={openModal} setModalStatus={setModalStatus} />
+      }
     </>
   );
 }

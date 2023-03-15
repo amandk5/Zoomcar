@@ -19,23 +19,104 @@ import { GoPrimitiveDot } from "react-icons/go";
 import { TbCurrentLocation } from "react-icons/tb";
 import { VscLocation } from "react-icons/vsc";
 import { AuthContext } from "../Context/AuthContextProvider";
+import GetLocation from "./GetLocation";
+import axios from "axios";
 import Map from "./Map";
 
 export default function SelectLocation({ openModal, setModalStatus }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [openMap, setMapStatus] = useState(false);
 
-  const { changeLocation } = useContext(AuthContext);
+  const {
+    changeLocation,
+    isChangeCityLinkClicked,
+    setIsChangeCityLinkClicked,
+  } = useContext(AuthContext);
+
+  const [inputLocation, setInputLocation] = useState("");
+
+  // set get location status
+  // const [allowLocation, setAllowLocation] = useState(false);
+  //set the state
+  const [location, setLocation] = useState({});
+  const [updatedLocationStatus, setUpdatedLocationStatus] = useState(null);
+  // state to keep track of select location button click
+  const [isClicked, setIsClicked] = useState(false);
+
+  //function to get the location
+  const getLocation = () => {
+    // navigator.geolocation.getCurrentPosition((position) => {
+    //   const { latitude, longitude } = position.coords;
+    //   setLocation(`latitude: ${latitude}, longitude: ${longitude}`);
+    // });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setLocation(`latitude: ${latitude}, longitude: ${longitude}`);
+        // set the select location button's setIsClicked to true
+        setIsClicked(true);
+      },
+      (err) => {
+        alert(`Please allow location services get your current location.`);
+      }
+    );
+  };
 
   useEffect(() => {
-    if (openModal) {
+    //console log the location if the location is not undefined
+    if (location !== undefined && isClicked === true) {
+      const latitude = location.latitude;
+      const longitude = location.longitude;
+      // console.log(location);
+      // show text location in progress, set updatedLocationStatus to progress
+      setUpdatedLocationStatus((status) => (status = "progress"));
+
+      const updateLocation = async () => {
+        await axios
+          .get(
+            `http://localhost:8080/user/location?latitude=${latitude}&longitude=${longitude}`
+          )
+          .then((res) => {
+            // console.log(res.data);
+            let foundLocation = res.data.location;
+            // pass the foundLocation value to changeLocation function in authContext
+            // also update the inputLocation text box
+            setInputLocation(foundLocation);
+            changeLocation(foundLocation);
+            // once above line is executed ,set the setUpdatedLocationStatus to completed
+            setUpdatedLocationStatus((status) => (status = "completed"));
+            // after 500ms set the setUpdatedLocationStatus to null to remove any kind of notification
+            setTimeout(() => {
+              setUpdatedLocationStatus(null);
+              // once its done, close the modal,and take user back to find car page
+              onClose();
+            }, 500);
+          })
+          .catch((err) => console.log(err));
+      };
+
+      updateLocation();
+      // clean up code for isClicked
+      return () => {
+        setIsClicked(false);
+      };
+    }
+  }, [isClicked]);
+
+  useEffect(() => {
+    if (openModal || isChangeCityLinkClicked) {
       onOpen();
       setModalStatus(false);
+      setIsChangeCityLinkClicked(false);
     }
   });
 
   return (
     <>
+      {
+        /* when select location is clicked, mount the GetLocation component  */
+        // allowLocation === true ? <GetLocation clicked={allowLocation} /> : null
+      }
       {/* <Button onClick={onOpen}>Open Modal</Button> */}
       <Modal onClose={onClose} size="full" isOpen={isOpen}>
         <ModalOverlay />
@@ -44,7 +125,12 @@ export default function SelectLocation({ openModal, setModalStatus }) {
             <BsArrowLeft fontSize="30px" onClick={onClose} />
           </ModalHeader>
           <ModalBody>
-            <Box w="100%" p="7" centerContent>
+            <Text>
+              {updatedLocationStatus === "progress" &&
+                "Getting current location..."}
+              {updatedLocationStatus === "completed" && "location updated"}
+            </Text>
+            <Box w="100%" p="7">
               <Flex justifyContent="center" alignItems="center" flexWrap="wrap">
                 <Flex
                   bg="white"
@@ -67,7 +153,11 @@ export default function SelectLocation({ openModal, setModalStatus }) {
                         onClose();
                       }
                     }}
-                    onChange={(e) => changeLocation(e.target.value)}
+                    value={inputLocation}
+                    onChange={(e) => {
+                      setInputLocation(e.target.value);
+                      changeLocation(e.target.value);
+                    }}
                     border="0"
                   />
                 </Flex>
@@ -75,6 +165,7 @@ export default function SelectLocation({ openModal, setModalStatus }) {
                   _hover="none"
                   bg="white"
                   leftIcon={<TbCurrentLocation fontSize="40px" />}
+                  onClick={getLocation}
                 >
                   <Text>Current Location</Text>
                 </Button>

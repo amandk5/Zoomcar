@@ -27,7 +27,13 @@ export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef(null);
 
-  const { isAuth, logOutUser } = useContext(AuthContext);
+  const {
+    isAuth,
+    logOutUser,
+    isChangeCityLinkClicked,
+    setIsChangeCityLinkClicked,
+  } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   return (
@@ -47,18 +53,23 @@ export default function Navbar() {
           </Heading>
         </Flex>
         <Flex alignItems="center" gap="10">
-          <a href="https://www.zoomcar.com/in/host/en?auth_required=true&utm_sub_source=dweb_ingress&platform=web">
+          <Link
+            to="#"
+            onClick={() =>
+              alert("Admin's page is in progress, sorry for inconvenience")
+            }
+          >
             <Flex py="2" px="4" bg="white" color="black" borderRadius="1.5rem">
               <img
                 src="https://www.zoomcar.com/build/e222e7ff96ffdd76290118718d52d71f.svg"
                 alt="icon"
               />
-              Become a Host
+              &nbsp; Admin
             </Flex>
-          </a>
-          <a href="https://www.zoomcar.com/zoomcar-mobility-services">
+          </Link>
+          {/* <a href="https://www.zoomcar.com/zoomcar-mobility-services">
             <h1>ZMS</h1>
-          </a>
+          </a> */}
           {/* if logged in then show bookings page */}
           {isAuth ? (
             <Link to="/bookings">
@@ -111,15 +122,17 @@ export default function Navbar() {
                 className={NavbarStyles.leftLink}
                 alignItems="center"
                 gap="4"
-                onClick={()=>{
+                onClick={() => {
                   onClose();
+                  // set the setIsChangeCityLinkClicked to true to open select location modal
+                  setIsChangeCityLinkClicked(true);
                 }}
               >
                 <GrLocation />
                 Change City
               </Flex>
             </Link>
-            <a href="https://www.zoomcar.com/in/host/en?auth_required=true&utm_sub_source=dweb_hamb&platform=web">
+            {/* <a href="https://www.zoomcar.com/in/host/en?auth_required=true&utm_sub_source=dweb_hamb&platform=web">
               <Flex
                 className={NavbarStyles.leftLink}
                 alignItems="center"
@@ -131,8 +144,8 @@ export default function Navbar() {
                 />
                 Become a Host
               </Flex>
-            </a>
-            <a href="https://www.zoomcar.com/in/bangalore/policy">
+            </a> */}
+            {/* <a href="https://www.zoomcar.com/in/bangalore/policy">
               <Flex
                 className={NavbarStyles.leftLink}
                 alignItems="center"
@@ -141,8 +154,8 @@ export default function Navbar() {
                 <BsLayoutTextSidebar />
                 Zoomcar Fleet Vehicles Policies
               </Flex>
-            </a>
-            <a href="https://www.zoomcar.com/in/bangalore/host-policy">
+            </a> */}
+            {/* <a href="https://www.zoomcar.com/in/bangalore/host-policy">
               <Flex
                 className={NavbarStyles.leftLink}
                 alignItems="center"
@@ -151,8 +164,8 @@ export default function Navbar() {
                 <BsLayoutTextSidebar />
                 Zoomcar Host Vehicles Policies
               </Flex>
-            </a>
-            <a href="https://www.zoomcar.com/faq">
+            </a> */}
+            {/* <a href="https://www.zoomcar.com/faq">
               <Flex
                 className={NavbarStyles.leftLink}
                 alignItems="center"
@@ -161,7 +174,7 @@ export default function Navbar() {
                 <BsTelephone />
                 Help & Support
               </Flex>
-            </a>
+            </a> */}
           </DrawerBody>
         </DrawerContent>
       </Drawer>

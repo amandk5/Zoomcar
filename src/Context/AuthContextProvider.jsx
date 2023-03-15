@@ -67,6 +67,10 @@ export default function AuthContextProvider({ children }) {
     setLocation(newLocation);
   };
 
+  // menu drawer link change city , select city handler for modal
+
+  const [isChangeCityLinkClicked, setIsChangeCityLinkClicked] = useState(false);
+
   return (
     <AuthContext.Provider
       value={{
@@ -78,6 +82,8 @@ export default function AuthContextProvider({ children }) {
         logOutUser,
         location,
         changeLocation,
+        isChangeCityLinkClicked,
+        setIsChangeCityLinkClicked,
       }}
     >
       {children}
