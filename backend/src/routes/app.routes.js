@@ -27,7 +27,42 @@ router.post("/register", async (req, res) => {
     .catch(() => res.send("failed to register"));
 });
 
-// login route
+// admin login route
+router.post("/admin/login", async (req, res) => {
+  // admin email wil always be same
+  const adminEmail = process.env.ADMIN_EMAIL;
+
+  const { email, password } = req.body;
+  // console.log(req.body);
+  // if received email doesn't match adminEmail return error
+  if (email !== adminEmail) {
+    res.status(401).send({ error: "only admin is allowed" });
+  } else {
+    // if admin email matches, do next step
+    const admin = await UserModel.findOne({ email: adminEmail, password });
+
+    // if admin credentials matched
+    if (admin) {
+      // generate the token
+      // 3 parts of token - header , payload, signature/secret
+      // header generated automatically
+
+      const token = jwt.sign(
+        { id: admin._id, email: admin.email },
+        "SECRET1234"
+      );
+
+      // to verify the token
+      // jwt.verify(token,"SECRET1234")
+      res.send({ message: "Login Success", token });
+    } else {
+      // if admin credentials do not match
+      res.status(401).send("Invalid credentials");
+    }
+  }
+});
+
+//user login route
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   console.log(req.body);
@@ -269,6 +304,39 @@ router.get("/user/location", async (req, res) => {
       .catch((err) => console.log(err));
   } else {
     res.status(401).send({ error: "failed to get the location" });
+  }
+});
+
+// get all users list from db
+router.get("/admin/list/users", async (req, res) => {
+  const { token } = req.headers;
+  // console.log(token);
+
+  // token is required, if no token found , return err
+  if (token === undefined) {
+    res.send("token is required to access this api");
+  }
+
+  // decode token
+  const decoded = jwt.decode(token);
+  // console.log(decoded);
+
+  const admin_id = decoded.id;
+
+  // first check in db,wheather the user is an admin
+  let admin = await UserModel.findOne({ _id: admin_id });
+
+  // if it's not an admin
+  if (admin === null) {
+    res.status(401).send({ error: "unauthorized" });
+  } else {
+    // if it's an admin
+    // get all users
+
+    // 1 means include while 0 means exclude in below query, example,  _id:0
+    let users = await UserModel.find({}, { name: 1, email: 1 });
+
+    res.status(200).send({ users: users });
   }
 });
 
