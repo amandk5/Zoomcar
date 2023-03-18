@@ -1,5 +1,9 @@
 import { Route, Routes } from "react-router-dom";
 import PrivateRoute from "../Components/PrivateRoute";
+import AdminDashboard from "../pages/AdminDashboard";
+import AdminListCarsPage from "../pages/AdminListCarsPage";
+import AdminListUsersPage from "../pages/AdminListUsersPage";
+import AdminLoginPage from "../pages/AdminLoginPage";
 import BookingsPage from "./BookingsPage";
 import HomePage from "./HomePage";
 import LoginPage from "./LoginPage";
@@ -18,6 +22,24 @@ export default function AllRoutes() {
         element={
           <PrivateRoute>
             <BookingsPage />
+          </PrivateRoute>
+        }
+      />
+      {/* for admin  */}
+      <Route path="/admin/login" element={<AdminLoginPage />} />
+      <Route
+        path="/admin/dashboard"
+        element={
+          <PrivateRoute>
+            <AdminDashboard />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/admin/list/users"
+        element={
+          <PrivateRoute>
+            <AdminListUsersPage />
           </PrivateRoute>
         }
       />

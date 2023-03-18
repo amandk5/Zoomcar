@@ -76,11 +76,13 @@ export default function CarCard({
           {isBooked ? (
             <Button
               my="2"
-              px="7"
+              py="0"
+              px="2"
               fontSize="13px"
               bg="red"
               color="white"
-              border="1px solid green"
+              border="1px solid white"
+              borderRadius={"0.5rem"}
               _hover={{ bg: "red", color: "white" }}
               fontWeight="medium"
               onClick={() => cancelBooking(delete_id)}

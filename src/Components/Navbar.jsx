@@ -18,7 +18,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { GrLocation } from "react-icons/gr";
 import { FaUserAlt } from "react-icons/fa";
 import { BsTelephone, BsLayoutTextSidebar } from "react-icons/bs";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import NavbarStyles from "./Navbar.module.css";
 import { useContext } from "react";
 import { AuthContext } from "../Context/AuthContextProvider";
@@ -26,6 +26,9 @@ import { AuthContext } from "../Context/AuthContextProvider";
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef(null);
+
+  // get current page url
+  const location = useLocation();
 
   const {
     isAuth,
@@ -53,25 +56,29 @@ export default function Navbar() {
           </Heading>
         </Flex>
         <Flex alignItems="center" gap="10">
-          <Link
-            to="#"
-            onClick={() =>
-              alert("Admin's page is in progress, sorry for inconvenience")
-            }
-          >
-            <Flex py="2" px="4" bg="white" color="black" borderRadius="1.5rem">
-              <img
-                src="https://www.zoomcar.com/build/e222e7ff96ffdd76290118718d52d71f.svg"
-                alt="icon"
-              />
-              &nbsp; Admin
-            </Flex>
-          </Link>
+          {!isAuth && (
+            <Link to="/admin/login">
+              <Flex
+                py="2"
+                px="4"
+                bg="white"
+                color="black"
+                borderRadius="1.5rem"
+              >
+                <img
+                  src="https://www.zoomcar.com/build/e222e7ff96ffdd76290118718d52d71f.svg"
+                  alt="icon"
+                />
+                &nbsp; Admin
+              </Flex>
+            </Link>
+          )}
           {/* <a href="https://www.zoomcar.com/zoomcar-mobility-services">
             <h1>ZMS</h1>
           </a> */}
-          {/* if logged in then show bookings page */}
-          {isAuth ? (
+          {/* if logged in by user then show bookings page */}
+          {/* if location.pathname includes admin don't show bookings  */}
+          {isAuth && !location.pathname.includes("/admin") ? (
             <Link to="/bookings">
               <h1>Bookings</h1>
             </Link>
@@ -82,10 +89,10 @@ export default function Navbar() {
             </Link>
           ) : (
             <Button
-              size="md"
+              size="xs"
               bg="red"
               color="#ffffff"
-              borderRadius="1.5rem"
+              borderRadius="0.5rem"
               _hover="none"
               onClick={() => {
                 logOutUser();

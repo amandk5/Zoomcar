@@ -12,6 +12,27 @@ export default function AuthContextProvider({ children }) {
   const [registered, setRegistrationStatus] = useState(false);
   const [location, setLocation] = useState("");
 
+  // admin login
+  const loginAdmin = (adminCredential) => {
+    axios
+      .post("https://zoomcar-api-two.vercel.app/admin/login", {
+        email: adminCredential.email,
+        password: adminCredential.password,
+      })
+      .then((res) => {
+        alert("Logged In Successfully");
+        setAuthStatus(true);
+        setToken(res.data.token);
+        // set token in local storage
+        localStorage.setItem("isLoggedIn", true);
+        localStorage.setItem("token", res.data.token);
+      })
+      .catch((err) => {
+        alert("invalid email or password");
+        console.log(err);
+      });
+  };
+
   const loginUser = (userCredential) => {
     // old - https://reqres.in/api/login
     axios
@@ -76,6 +97,7 @@ export default function AuthContextProvider({ children }) {
       value={{
         isAuth,
         token,
+        loginAdmin,
         loginUser,
         registered,
         registerUser,
