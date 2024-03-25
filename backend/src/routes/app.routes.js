@@ -29,7 +29,7 @@ router.post("/register", async (req, res) => {
 
 // admin login route
 router.post("/admin/login", async (req, res) => {
-  // admin email wil always be same
+  // admin email will always be same
   const adminEmail = process.env.ADMIN_EMAIL;
 
   const { email, password } = req.body;
@@ -84,6 +84,57 @@ router.post("/login", async (req, res) => {
     res.send({ message: "Login Success", token });
   } else {
     res.status(401).send("Invalid credentials");
+  }
+});
+
+// add car api
+router.post("/car/add", async (req, res) => {
+  // image
+  // name
+  // transmission
+  // fuel
+  // seats
+  // ratings
+  // kms
+  // address
+  // discount_price
+  // original_price
+  // car_type
+  // const {
+  //   image,
+  //   name,
+  //   transmission,
+  //   fuel,
+  //   seats,
+  //   ratings,
+  //   kms,
+  //   address,
+  //   discount_price,
+  //   original_price,
+  //   car_type,
+  // } = req.body;
+  let carDetails = req.body;
+  if (carDetails["adminEmail"]) {
+    const adminEmail = process.env.ADMIN_EMAIL;
+    if (carDetails["adminEmail"] === adminEmail) {
+      delete carDetails["adminEmail"];
+
+      const newCarDetails = new CarModel(carDetails);
+      await newCarDetails
+        .save()
+        .then((resp) =>
+          res
+            .status(201)
+            .send({ message: "new car details uploaded successfully" })
+        )
+        .catch((err) =>
+          res.send({ message: "failed to upload new car details" })
+        );
+    } else {
+      res.status(401).send("unauthorized");
+    }
+  } else {
+    res.status(401).send("unauthorized");
   }
 });
 
