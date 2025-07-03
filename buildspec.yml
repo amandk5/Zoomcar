@@ -16,5 +16,5 @@ phases:
 artifacts:
   files:
       - '**/*'
-  base-directory: src
+  base-directory: build
   discard-paths: no
