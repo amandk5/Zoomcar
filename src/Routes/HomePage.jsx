@@ -13,7 +13,7 @@ export default function HomePage() {
       <Box1 />
       <Box w="70%" margin="auto">
         <Heading size="sm" mt="5" textAlign="left">
-          SELF DRIVE CARS IN TEST {location!=="" ? location : "BANGLORE"}
+          SELF DRIVE CARS IN {location!=="" ? location : "BANGLORE"}
         </Heading>
         <Text fontSize="15px" textAlign="left" mt="1">
           In addition to being the capital city, {location!=="" ? location : "BANGLORE"} is a cosmopolitan city
