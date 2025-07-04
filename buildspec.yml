@@ -1,20 +1,12 @@
 version: 0.2
-
 phases:
-  install:
-    runtime-versions:
-      nodejs:16
+  pre_build:
     commands:
-      - echo Installing dependencies...
-      - npm ci --legacy-peer-deps
-
+      - npm install
   build:
     commands:
-      - echo Building the React app...
       - npm run build
-
 artifacts:
   files:
-      - '**/*'
+    - '**/*'
   base-directory: build
-  discard-paths: no
